@@ -1,0 +1,204 @@
+{
+  "events": [
+    [
+      "040a437b-2976-4899-a30b-fce471f86839",
+      {
+        "id": "040a437b-2976-4899-a30b-fce471f86839",
+        "title": "退学",
+        "description": "林北因异能失控在课堂上造成混乱，被学校正式劝退。这是他人生的重要转折点，标志着普通高中生生活的结束和异能者新身份的开始。",
+        "datetime": "2026-05-05T07:09:00.000Z",
+        "parentId": null,
+        "children": [
+          "b188b247-963e-4bd4-ac95-628999e15679",
+          "5963de4b-554f-431d-954c-0f24bc27aaf4",
+          "aec89012-6955-4fa0-97c7-eaa4ddcb5574"
+        ],
+        "symbol": "→",
+        "color": "#3b82f6",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "b188b247-963e-4bd4-ac95-628999e15679",
+      {
+        "id": "b188b247-963e-4bd4-ac95-628999e15679",
+        "title": "课堂失控",
+        "description": "林北在物理课上异能突然失控，将讲台上的粉笔盒随机传送到自己手中，随后又将同桌的橡皮擦传送到天花板，引发全班恐慌和混乱。",
+        "datetime": "2026/5/5 14:30",
+        "parentId": "040a437b-2976-4899-a30b-fce471f86839",
+        "children": [],
+        "symbol": "→",
+        "color": "#ef4444",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "5963de4b-554f-431d-954c-0f24bc27aaf4",
+      {
+        "id": "5963de4b-554f-431d-954c-0f24bc27aaf4",
+        "title": "校长办公室劝退",
+        "description": "林北被叫到校长办公室，校方出示监控录像和目击者证词，正式通知他因'严重扰乱教学秩序'被劝退。林北默默接受，这是他第一次直面异能带来的现实后果。",
+        "datetime": "2026/5/5 15:45",
+        "parentId": "040a437b-2976-4899-a30b-fce471f86839",
+        "children": [],
+        "symbol": "→",
+        "color": "#8b5cf6",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "aec89012-6955-4fa0-97c7-eaa4ddcb5574",
+      {
+        "id": "aec89012-6955-4fa0-97c7-eaa4ddcb5574",
+        "title": "独自回家",
+        "description": "林北背着空书包独自走在放学路上，看着其他同学欢声笑语，第一次深刻感受到自己与普通世界的隔阂。他摸了摸口袋里异能局发来的报到通知单，心中五味杂陈。",
+        "datetime": "2026/5/5 16:30",
+        "parentId": "040a437b-2976-4899-a30b-fce471f86839",
+        "children": [],
+        "symbol": "→",
+        "color": "#ec4899",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "442bc479-b594-4b80-8273-e30c3cb50a69",
+      {
+        "id": "442bc479-b594-4b80-8273-e30c3cb50a69",
+        "title": "异能局首日",
+        "description": "林北被劝退后当天前往异能局报到，经历评估测试和突发危机，在与李默默的合作中开启异能者生涯。",
+        "datetime": "2026-05-05T12:03:00.000Z",
+        "parentId": null,
+        "children": [
+          "a7e64e40-fb15-4776-a8f1-97f6bff1c6ec",
+          "3035d7af-4171-4f22-8b4a-ca3f59d291f3",
+          "a227cf3e-01b3-45f9-b113-f384af96580c"
+        ],
+        "symbol": "→",
+        "color": "#3b82f6",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "a7e64e40-fb15-4776-a8f1-97f6bff1c6ec",
+      {
+        "id": "a7e64e40-fb15-4776-a8f1-97f6bff1c6ec",
+        "title": "初入异能局",
+        "description": "林北被劝退后当天前往异能局报到，在异能局大厅与李默默初次相遇，标志着他正式踏入异能者世界。",
+        "datetime": "2026/5/5 18:00",
+        "parentId": "442bc479-b594-4b80-8273-e30c3cb50a69",
+        "children": [],
+        "symbol": "→",
+        "color": "#6366f1",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "3035d7af-4171-4f22-8b4a-ca3f59d291f3",
+      {
+        "id": "3035d7af-4171-4f22-8b4a-ca3f59d291f3",
+        "title": "能力评估测试",
+        "description": "林北参加异能局能力评估测试，李默默作为助理参与。林北异能失控导致混乱，两人触碰后互相感知到对方的尴尬回忆，产生初步理解。",
+        "datetime": "2026/5/5 19:00",
+        "parentId": "442bc479-b594-4b80-8273-e30c3cb50a69",
+        "children": [],
+        "symbol": "→",
+        "color": "#8b5cf6",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "a227cf3e-01b3-45f9-b113-f384af96580c",
+      {
+        "id": "a227cf3e-01b3-45f9-b113-f384af96580c",
+        "title": "机器人危机",
+        "description": "异能局地下三层的清洁机器人突然失控，金属部件异常增生变形，攻击工作人员。林北和李默默被临时指派处理此事件，在危机中首次真正合作——林北的随机传送意外制造破绽，李默默通过触碰伤员间接发现真相，两人在共享的尴尬回忆基础上建立初步信任。",
+        "datetime": "2026/5/5 20:15",
+        "parentId": "442bc479-b594-4b80-8273-e30c3cb50a69",
+        "children": [],
+        "symbol": "→",
+        "color": "#a85508",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "4c53ce3c-0fbe-4ded-b142-ee9784db4fe9",
+      {
+        "id": "4c53ce3c-0fbe-4ded-b142-ee9784db4fe9",
+        "title": "神秘消失案",
+        "description": "异能局接到多起报案，城市各处出现物品精准消失事件，监控显示物品凭空消失，手法与林北的传送能力相似但更加精准。林北和李默默被指派联合调查此案。",
+        "datetime": "2026/5/6",
+        "parentId": null,
+        "children": [
+          "8842d19e-fe0e-4540-81d0-976abab93d48",
+          "146b40c1-c954-4b7d-a8fd-f428dfb8ed8d",
+          "455ae1da-a061-48b2-bbbe-a1c02b250d4f",
+          "3edf8789-17a9-4f1e-b71b-2fe8baf8ef62"
+        ],
+        "symbol": "→",
+        "color": "#3b82f6",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "8842d19e-fe0e-4540-81d0-976abab93d48",
+      {
+        "id": "8842d19e-fe0e-4540-81d0-976abab93d48",
+        "title": "意识传送突破",
+        "description": "林北在调查神秘消失案时意外触发一次特殊传送，不仅传送物品，还短暂传送了自己的意识到另一地点，看到了关键线索，暗示其能力存在更深层机制。",
+        "datetime": "2026/5/7",
+        "parentId": "4c53ce3c-0fbe-4ded-b142-ee9784db4fe9",
+        "children": [],
+        "symbol": "→",
+        "color": "#8b5cf6",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "146b40c1-c954-4b7d-a8fd-f428dfb8ed8d",
+      {
+        "id": "146b40c1-c954-4b7d-a8fd-f428dfb8ed8d",
+        "title": "能力本质探讨",
+        "description": "陈博士与林北、李默默共同分析意识传送事件，提出林北的能力可能与空间感知和意识投射有关，而非简单的随机传送。",
+        "datetime": "2026/5/7",
+        "parentId": "4c53ce3c-0fbe-4ded-b142-ee9784db4fe9",
+        "children": [],
+        "symbol": "→",
+        "color": "#ef4444",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "455ae1da-a061-48b2-bbbe-a1c02b250d4f",
+      {
+        "id": "455ae1da-a061-48b2-bbbe-a1c02b250d4f",
+        "title": "幕后黑手浮现",
+        "description": "林北和李默默在调查中发现神秘消失案背后有人刻意模仿F级能力，目的是测试新型异能控制技术，制造混乱以掩盖更大阴谋。",
+        "datetime": "2026/5/8",
+        "parentId": "4c53ce3c-0fbe-4ded-b142-ee9784db4fe9",
+        "children": [],
+        "symbol": "→",
+        "color": "#ec4899",
+        "isCollapsed": false
+      }
+    ],
+    [
+      "3edf8789-17a9-4f1e-b71b-2fe8baf8ef62",
+      {
+        "id": "3edf8789-17a9-4f1e-b71b-2fe8baf8ef62",
+        "title": "深度协同突破",
+        "description": "林北和李默默在伏击现场被迫深度合作，林北的传送能力与李默默的痛觉共振产生意外协同，两人短暂共享感知，发现对方能力的隐藏潜力。",
+        "datetime": "2026/5/9",
+        "parentId": "4c53ce3c-0fbe-4ded-b142-ee9784db4fe9",
+        "children": [],
+        "symbol": "→",
+        "color": "#06b6d4",
+        "isCollapsed": false
+      }
+    ]
+  ],
+  "rootEventIds": [
+    "040a437b-2976-4899-a30b-fce471f86839",
+    "442bc479-b594-4b80-8273-e30c3cb50a69",
+    "4c53ce3c-0fbe-4ded-b142-ee9784db4fe9"
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "characters": [
+    [
+      "57f12b28-fbed-4439-8c19-b60eeda48861",
+      {
+        "id": "57f12b28-fbed-4439-8c19-b60eeda48861",
+        "name": "李默默",
+        "gender": "女",
+        "age": "18",
+        "height": "169",
+        "weight": "50",
+        "traits": [
+          "冷静",
+          "独立",
+          "冷漠",
+          "冷酷"
+        ],
+        "description": "年轻时极具游泳天赋，14岁50米长池25秒，但觉醒异能导致无法参与职业比赛。\n异能：触碰别人会得到被触碰人的尴尬的回忆，回忆的感情越剧烈，会导致她的头也传来刺痛，同时也会感同身受这种尴尬的感觉，会让自己很难受。\n外号小默。",
+        "relationships": [],
+        "relatedEventIds": [],
+        "color": "#8b5cf6"
+      }
+    ],
+    [
+      "45ac1b80-e171-468e-af91-c7b9a1754c33",
+      {
+        "id": "45ac1b80-e171-468e-af91-c7b9a1754c33",
+        "name": "林北",
+        "gender": "男",
+        "age": "18",
+        "height": "179",
+        "weight": "65",
+        "traits": [
+          "聪明",
+          "幽默",
+          "善良",
+          "热情",
+          "乐观",
+          "自卑"
+        ],
+        "description": "普通的高中生，无父无母，在高中觉醒异能，两个月后被劝退，来到异能局。\n异能：F级，清醒时每隔五分钟随机传送物品到自身周围。",
+        "relationships": [],
+        "relatedEventIds": [],
+        "color": "#3b82f6"
+      }
+    ],
+    [
+      "0fe811a4-9e0d-4b2c-bdb5-25e825714718",
+      {
+        "id": "0fe811a4-9e0d-4b2c-bdb5-25e825714718",
+        "name": "陈博士",
+        "gender": "男",
+        "age": "45",
+        "height": "",
+        "weight": "",
+        "description": "异能局首席研究员，专攻F级异能者能力机制研究，对林北的能力表现出极大兴趣。",
+        "traits": [
+          "睿智",
+          "严谨",
+          "温和",
+          "执着"
+        ],
+        "relationships": [],
+        "relatedEventIds": [],
+        "color": "#10b981"
+      }
+    ],
+    [
+      "5b685d92-25ad-4693-af27-6d99cbe13bcc",
+      {
+        "id": "5b685d92-25ad-4693-af27-6d99cbe13bcc",
+        "name": "王队长",
+        "gender": "男",
+        "age": "52",
+        "height": "",
+        "weight": "",
+        "description": "异能局行动组负责人，对F级异能者持怀疑态度，认为他们过于不稳定难以控制。",
+        "traits": [
+          "严厉",
+          "务实",
+          "经验丰富",
+          "保守"
+        ],
+        "relationships": [],
+        "relatedEventIds": [],
+        "color": "#f59e0b"
+      }
+    ]
+  ]
+}
