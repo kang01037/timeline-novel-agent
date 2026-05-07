@@ -225,6 +225,7 @@ export class TimelineView {
           ${collapseArrow}
           <span class="timeline-event-card-symbol">${event.symbol}</span>
           <span class="timeline-event-card-title">${escapeHtml(event.title)}</span>
+          <button class="ai-generate-btn" data-action="ai-generate" title="AI 生成章节">✦</button>
           <button class="add-child-btn" data-action="add-child" title="添加子事件">+</button>
           <button class="delete-event-btn" data-action="delete-event" title="删除事件">×</button>
         </div>
@@ -248,6 +249,7 @@ export class TimelineView {
           <span class="timeline-event-card-symbol">${event.symbol}</span>
           <span class="timeline-event-card-title">${escapeHtml(event.title)}</span>
           <span class="timeline-event-child-date">${this.formatDate(event.datetime)}</span>
+          <button class="ai-generate-btn" data-action="ai-generate" title="AI 生成章节">✦</button>
           <button class="add-child-btn" data-action="add-child" title="添加子事件">+</button>
           <button class="delete-event-btn" data-action="delete-event" title="删除事件">×</button>
         </div>
@@ -269,6 +271,21 @@ export class TimelineView {
         if (eventId) {
           getState().selectEvent(eventId);
           EventForm.show(eventId, () => this.render());
+        }
+      });
+    });
+
+    this.element.querySelectorAll('.ai-generate-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const eventId = (e.currentTarget as HTMLElement).closest('.timeline-event-wrapper')?.getAttribute('data-event-id');
+        if (eventId) {
+          const event = getState().events.get(eventId);
+          if (event) {
+            document.dispatchEvent(new CustomEvent('ai-generate-chapter', {
+              detail: { eventId, title: event.title, description: event.description, datetime: event.datetime }
+            }));
+          }
         }
       });
     });

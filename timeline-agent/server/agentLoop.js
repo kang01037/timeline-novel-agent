@@ -56,7 +56,7 @@ function getAgentSystemPrompt(context, memory = { preferences: [], summaries: []
 - **get_events**: 查询故事线事件
 - **add_character** / **update_character**: 创建或修改角色（描述保持简短）
 - **add_event** / **update_event**: 添加或修改故事事件（描述保持简短大纲式）
-- **generate_chapter**: ⚠️ 仅在用户明确要求细写时才使用
+- **generate_chapter**: ⚠️ 仅在用户明确要求细写时才使用。调用后内容会自动展示给用户，你只需简要说明即可
 - **check_consistency**: 检查内容与设定的一致性
 
 ## 工作方式（自动规划）
@@ -93,6 +93,7 @@ function getAgentSystemPrompt(context, memory = { preferences: [], summaries: []
 - 如果发现设定冲突，主动提出修改建议
 - 不要编造不存在的角色或事件
 - 除非用户明确要求，否则**不要调用 generate_chapter**
+- 调用 generate_chapter 后，章节内容会自动展示给用户，你不需要重复输出内容，只需简要总结即可
 - 回复使用中文
 
 ## 当前故事概况
@@ -312,6 +313,24 @@ export async function runAgentLoop(openai, model, userMessage, storyData, charac
           parsedResult = { raw: result };
         }
 
+        // generate_chapter 特殊处理：内容直接推送给用户，不经过 LLM
+        if (toolName === 'generate_chapter' && parsedResult.success && parsedResult.content) {
+          const chapterContent = parsedResult.content;
+          // 直接将章节内容通过 SSE 推送给前端展示
+          sendSSE({
+            type: 'chapter_content',
+            content: chapterContent,
+            chapterTitle: toolArgs.chapterTitle || '',
+            length: chapterContent.length,
+          });
+          // 工具结果只保留摘要，避免大量内容回传 LLM
+          parsedResult = {
+            success: true,
+            message: `章节内容已直接展示给用户，共 ${chapterContent.length} 字`,
+            length: chapterContent.length,
+          };
+        }
+
         sendSSE({
           type: 'tool_result',
           tool: toolName,
@@ -324,7 +343,7 @@ export async function runAgentLoop(openai, model, userMessage, storyData, charac
         messages.push({
           role: 'tool',
           tool_call_id: toolCall.id,
-          content: result,
+          content: JSON.stringify(parsedResult),
         });
       }
     } catch (error) {

@@ -45,6 +45,13 @@ export interface AgentContentEvent {
   content: string;
 }
 
+export interface AgentChapterContentEvent {
+  type: 'chapter_content';
+  content: string;
+  chapterTitle: string;
+  length: number;
+}
+
 export interface AgentDoneEvent {
   type: 'agent_done';
   iterations: number;
@@ -55,12 +62,13 @@ export interface AgentErrorEvent {
   error: string;
 }
 
-export type AgentSSEEvent = AgentStepEvent | AgentToolConfirmEvent | AgentContentEvent | AgentDoneEvent | AgentErrorEvent;
+export type AgentSSEEvent = AgentStepEvent | AgentToolConfirmEvent | AgentContentEvent | AgentChapterContentEvent | AgentDoneEvent | AgentErrorEvent;
 
 export interface AgentCallbacks {
   onStep?: (event: AgentStepEvent) => void;
   onToolConfirm?: (event: AgentToolConfirmEvent) => void;
   onContent?: (content: string) => void;
+  onChapterContent?: (event: AgentChapterContentEvent) => void;
   onDone?: (iterations: number) => void;
   onError?: (error: string) => void;
 }
@@ -246,6 +254,9 @@ export function agentChatStream(
                   break;
                 case 'content':
                   callbacks.onContent?.(event.content);
+                  break;
+                case 'chapter_content':
+                  callbacks.onChapterContent?.(event as AgentChapterContentEvent);
                   break;
                 case 'agent_done':
                   callbacks.onDone?.(event.iterations);

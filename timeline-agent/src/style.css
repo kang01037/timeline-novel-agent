@@ -972,6 +972,29 @@ body {
   background: rgba(239, 68, 68, 0.6);
 }
 
+/* AI 生成章节按钮 */
+.ai-generate-btn {
+  width: 20px;
+  height: 20px;
+  background: rgba(139, 92, 246, 0.4);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 4px;
+  transition: all 0.2s;
+}
+
+.ai-generate-btn:hover {
+  background: rgba(139, 92, 246, 0.7);
+  transform: scale(1.15);
+}
+
 /* 折叠箭头 */
 .collapse-arrow {
   width: 18px;
@@ -1222,6 +1245,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   word-break: break-word;
+  overflow-wrap: break-word;
   border: 1px solid var(--border-color);
 }
 
@@ -1275,6 +1299,8 @@ body {
   border-radius: 8px;
   overflow-x: auto;
   margin: 8px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .markdown-content pre code {
@@ -1294,8 +1320,33 @@ body {
   margin: 12px 0;
 }
 
+/* 章节内容样式（与 LLM 回复视觉分离） */
+.chapter-content {
+  background-color: rgba(139, 92, 246, 0.06);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 10px;
+  max-height: 500px;
+  overflow-y: auto;
+  line-height: 1.8;
+  font-size: 14px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.chapter-content h1,
+.chapter-content h2,
+.chapter-content h3 {
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+  padding-bottom: 6px;
+  margin-top: 16px;
+}
+
 .markdown-content p {
   margin: 4px 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .markdown-content table {

@@ -10,6 +10,7 @@ import {
   type ConsistencyResult,
   type AgentStepEvent,
   type AgentToolConfirmEvent,
+  type AgentChapterContentEvent,
 } from '../services/agentService';
 import { showAIConfigPanel } from './AIConfigPanel';
 import { escapeHtml, generateId, copyToClipboard, createRAFThrottle } from '../utils';
@@ -56,6 +57,7 @@ interface ChatMessage {
   consistencyResult?: ConsistencyResult;
   agentSteps?: AgentStep[];
   useAgent?: boolean; // 是否使用 Agent 模式
+  chapterContent?: string; // generate_chapter 工具生成的章节内容（独立存储，避免与 LLM 回复混合）
 }
 
 interface ChapterVersion {
@@ -73,11 +75,22 @@ export class ChatPanel {
   private serverOnline = false;
   private isGenerating = false;
   private useAgentMode = true; // 默认使用 Agent 模式
+  private generateChapterHandler: EventListener | null = null;
 
   constructor(container: HTMLElement) {
     this.element = container;
     this.checkServer();
     this.render();
+    this.setupGlobalEvents();
+  }
+
+  private setupGlobalEvents(): void {
+    this.generateChapterHandler = ((e: CustomEvent) => {
+      const { title, description } = e.detail;
+      const prompt = `请为章节"${title}"生成详细内容${description ? `，章节概述：${description}` : ''}。要求包含场景描写、人物对话和心理活动。`;
+      this.triggerGeneration(prompt);
+    }) as EventListener;
+    document.addEventListener('ai-generate-chapter', this.generateChapterHandler);
   }
 
   private async checkServer(): Promise<void> {
@@ -142,7 +155,10 @@ export class ChatPanel {
       <div class="chat-input-area">
         <div class="chat-input-row">
           <textarea id="chat-input" rows="2" placeholder="${this.useAgentMode ? '告诉AI你要做什么，如：帮我写第三章并添加到故事线' : '输入创作要求，如：请为第一章写一段开场白...'}"></textarea>
-          <button class="btn btn-primary btn-small" id="chat-send">发送</button>
+          ${this.isGenerating
+            ? '<button class="btn btn-danger btn-small" id="chat-stop">停止</button>'
+            : '<button class="btn btn-primary btn-small" id="chat-send">发送</button>'
+          }
         </div>
         <div class="chat-quick-actions">
           <button class="quick-action-btn" data-action="generate-chapter">生成章节</button>
@@ -214,15 +230,17 @@ export class ChatPanel {
       : '';
 
     const hasContent = msg.content.length > 0;
+    const hasChapter = !!msg.chapterContent && msg.chapterContent.length > 0;
 
     return `
       <div class="chat-message assistant-message" data-message-id="${msg.id}">
         <div class="message-avatar">🤖</div>
         <div class="message-body">
           ${stepsHtml}
-          <div class="message-content markdown-content">${hasContent ? this.renderMarkdown(msg.content) : (msg.isStreaming && !stepsHtml ? '<span class="typing-indicator">正在思考中...</span>' : '')}</div>
+          ${hasChapter ? `<div class="chapter-content markdown-content">${this.renderMarkdown(msg.chapterContent!)}</div>` : ''}
+          <div class="message-content markdown-content">${hasContent ? this.renderMarkdown(msg.content) : (msg.isStreaming && !stepsHtml && !hasChapter ? '<span class="typing-indicator">正在思考中...</span>' : '')}</div>
           ${consistencyHtml}
-          ${hasContent && !msg.isStreaming ? this.renderMessageActions(msg.id) : ''}
+          ${(hasContent || hasChapter) && !msg.isStreaming ? this.renderMessageActions(msg.id) : ''}
           <div class="message-time">${time}${msg.isStreaming ? ' · 处理中...' : ''}</div>
         </div>
       </div>
@@ -359,7 +377,7 @@ export class ChatPanel {
     }
   }
 
-  // RAF 节流的流式更新（含 agent 步骤）
+  // RAF 节流的流式更新（含 agent 步骤 + 章节内容）
   private throttledUpdateStreaming = createRAFThrottle((msg: ChatMessage) => {
     const msgEl = this.element.querySelector(`[data-message-id="${msg.id}"]`);
     if (!msgEl) return;
@@ -368,7 +386,6 @@ export class ChatPanel {
     const stepsContainer = msgEl.querySelector('.agent-steps');
     if (stepsContainer && msg.agentSteps && msg.agentSteps.length > 0) {
       const newStepsHtml = this.renderAgentSteps(msg.agentSteps, !!msg.isStreaming);
-      // 替换整个 agent-steps 容器
       const temp = document.createElement('div');
       temp.innerHTML = newStepsHtml;
       const newContainer = temp.firstElementChild;
@@ -376,7 +393,6 @@ export class ChatPanel {
         stepsContainer.replaceWith(newContainer);
       }
     } else if (!stepsContainer && msg.agentSteps && msg.agentSteps.length > 0) {
-      // 首次出现 steps，插入到 message-body 开头
       const messageBody = msgEl.querySelector('.message-body');
       const contentEl = msgEl.querySelector('.message-content');
       if (messageBody && contentEl) {
@@ -389,11 +405,30 @@ export class ChatPanel {
       }
     }
 
+    // 更新章节内容
+    const hasChapter = !!msg.chapterContent && msg.chapterContent.length > 0;
+    let chapterEl = msgEl.querySelector('.chapter-content') as HTMLElement | null;
+    if (hasChapter) {
+      if (!chapterEl) {
+        // 首次出现章节内容，插入到 message-content 之前
+        const messageBody = msgEl.querySelector('.message-body');
+        const contentEl = msgEl.querySelector('.message-content');
+        if (messageBody && contentEl) {
+          chapterEl = document.createElement('div');
+          chapterEl.className = 'chapter-content markdown-content';
+          messageBody.insertBefore(chapterEl, contentEl);
+        }
+      }
+      if (chapterEl) {
+        chapterEl.innerHTML = this.renderMarkdown(msg.chapterContent!);
+      }
+    }
+
     // 更新消息内容
     const contentEl = msgEl.querySelector('.message-content');
     if (contentEl) {
       const hasContent = msg.content.length > 0;
-      contentEl.innerHTML = hasContent ? this.renderMarkdown(msg.content) : (msg.isStreaming && !(msg.agentSteps && msg.agentSteps.length > 0) ? '<span class="typing-indicator">正在思考中...</span>' : '');
+      contentEl.innerHTML = hasContent ? this.renderMarkdown(msg.content) : (msg.isStreaming && !(msg.agentSteps && msg.agentSteps.length > 0) && !hasChapter ? '<span class="typing-indicator">正在思考中...</span>' : '');
     }
 
     const container = this.element.querySelector('#chat-messages');
@@ -406,6 +441,11 @@ export class ChatPanel {
     // 发送按钮
     this.element.querySelector('#chat-send')?.addEventListener('click', () => {
       this.handleSend();
+    });
+
+    // 停止按钮
+    this.element.querySelector('#chat-stop')?.addEventListener('click', () => {
+      this.stopGeneration();
     });
 
     // 输入框回车
@@ -474,7 +514,7 @@ export class ChatPanel {
 
   private async handleSend(): Promise<void> {
     if (this.isGenerating) {
-      this.addSystemMessage('⚠️ 正在生成中，请等待完成或刷新页面');
+      this.addSystemMessage('⚠️ 正在生成中，请等待完成或点击停止按钮');
       return;
     }
 
@@ -490,7 +530,22 @@ export class ChatPanel {
     }
 
     input.value = '';
+    await this.triggerGeneration(text);
+  }
+
+  private async triggerGeneration(text: string): Promise<void> {
+    if (this.isGenerating) {
+      this.addSystemMessage('⚠️ 正在生成中，请等待完成或点击停止按钮');
+      return;
+    }
+
+    if (!this.serverOnline) {
+      this.addSystemMessage('⚠️ 后端服务未连接，请先启动 AI 服务（npm run dev:server）');
+      return;
+    }
+
     this.isGenerating = true;
+    this.updateInputArea();
 
     // 同步最新数据
     await this.syncCurrentData();
@@ -546,6 +601,11 @@ export class ChatPanel {
         onToolConfirm: (event: AgentToolConfirmEvent) => {
           this.showToolConfirmDialog(event);
         },
+        onChapterContent: (event: AgentChapterContentEvent) => {
+          // 章节内容独立存储，不与 LLM 回复混合
+          assistantMsg.chapterContent = (assistantMsg.chapterContent || '') + event.content;
+          this.throttledUpdateStreaming(assistantMsg);
+        },
         onContent: (content: string) => {
           assistantMsg.content += content;
           this.throttledUpdateStreaming(assistantMsg);
@@ -554,11 +614,12 @@ export class ChatPanel {
           assistantMsg.isStreaming = false;
           this.currentController = null;
           this.isGenerating = false;
+          this.updateInputArea();
           this.renderMessages();
 
           this.versions.push({
             id: assistantMsg.id,
-            content: assistantMsg.content,
+            content: assistantMsg.chapterContent || assistantMsg.content,
             timestamp: Date.now(),
             userRequest: text,
           });
@@ -568,6 +629,7 @@ export class ChatPanel {
           assistantMsg.isStreaming = false;
           this.currentController = null;
           this.isGenerating = false;
+          this.updateInputArea();
           this.renderMessages();
         },
       }
@@ -592,6 +654,7 @@ export class ChatPanel {
         assistantMsg.isStreaming = false;
         this.currentController = null;
         this.isGenerating = false;
+        this.updateInputArea();
         this.renderMessages();
 
         this.versions.push({
@@ -606,6 +669,7 @@ export class ChatPanel {
         assistantMsg.isStreaming = false;
         this.currentController = null;
         this.isGenerating = false;
+        this.updateInputArea();
         this.renderMessages();
       }
     );
@@ -826,7 +890,46 @@ export class ChatPanel {
     }
   }
 
+  private updateInputArea(): void {
+    const inputRow = this.element.querySelector('.chat-input-row');
+    if (!inputRow) return;
+    const existingBtn = inputRow.querySelector('#chat-send, #chat-stop');
+    if (existingBtn) {
+      const newBtn = document.createElement('button');
+      if (this.isGenerating) {
+        newBtn.className = 'btn btn-danger btn-small';
+        newBtn.id = 'chat-stop';
+        newBtn.textContent = '停止';
+        newBtn.addEventListener('click', () => this.stopGeneration());
+      } else {
+        newBtn.className = 'btn btn-primary btn-small';
+        newBtn.id = 'chat-send';
+        newBtn.textContent = '发送';
+        newBtn.addEventListener('click', () => this.handleSend());
+      }
+      existingBtn.replaceWith(newBtn);
+    }
+  }
+
+  private stopGeneration(): void {
+    if (this.currentController) {
+      this.currentController.abort();
+      this.currentController = null;
+    }
+    this.isGenerating = false;
+    // 标记当前流式消息为已完成
+    const streamingMsg = this.messages.find(m => m.isStreaming);
+    if (streamingMsg) {
+      streamingMsg.isStreaming = false;
+    }
+    this.addSystemMessage('已停止生成');
+    this.render();
+  }
+
   destroy(): void {
     this.currentController?.abort();
+    if (this.generateChapterHandler) {
+      document.removeEventListener('ai-generate-chapter', this.generateChapterHandler);
+    }
   }
 }
